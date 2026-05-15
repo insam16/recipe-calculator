@@ -24,7 +24,10 @@ export default function Home() {
       <select
         className="border p-2 w-full mb-2"
         value={item}
-        onChange={(e) => setItem(e.target.value as ItemName)}
+        onChange={(e) => {
+          setItem(e.target.value as ItemName);
+          setResult(null);
+        }}
       >
         {Object.keys(recipes).map((key) => (
           <option key={key} value={key}>
@@ -44,7 +47,10 @@ export default function Home() {
           type="text"
           className="border p-2 w-full mb-2"
           value={value}
-          onChange={(e) => { setValue(e.target.value) }}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setResult(null);
+          }}
           placeholder="제작할 개수를 입력해주세요"
         />
 
@@ -66,28 +72,30 @@ export default function Home() {
       </form>
 
       {/* 결과 */}
-      {result && (
-        <div className="mt-6">
-          <h2 className="font-bold">목표</h2>
-          <ul>
-            <li key={item}>
-              {item}: {num}
-            </li>
-          </ul>
-
-          <h2 className="font-bold mt-4">필요한 작물</h2>
-          <ul>
-            {Object.entries(result.materials).map(([name, cnt]) => (
-              <li key={name}>
-                {name}: {(cnt as number).toLocaleString()}
+      {
+        result && (
+          <div className="mt-6">
+            <h2 className="font-bold">목표</h2>
+            <ul>
+              <li key={item}>
+                {item}: {num}
               </li>
-            ))}
-          </ul>
+            </ul>
 
-          <h2 className="font-bold mt-4">총 비용</h2>
-          <p>{result.cost.toLocaleString()}ED</p>
-        </div>
-      )}
-    </div>
+            <h2 className="font-bold mt-4">필요한 작물</h2>
+            <ul>
+              {Object.entries(result.materials).map(([name, cnt]) => (
+                <li key={name}>
+                  {name}: {(cnt as number).toLocaleString()}
+                </li>
+              ))}
+            </ul>
+
+            <h2 className="font-bold mt-4">총 비용</h2>
+            <p>{result.cost.toLocaleString()}ED</p>
+          </div>
+        )
+      }
+    </div >
   )
 }
