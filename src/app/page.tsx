@@ -17,59 +17,60 @@ export default function Home() {
   }
 
   return (
-    <div className="p-8 w-96 mx-auto">
+    <div className="p-8 w-[430px] mx-auto">
       <h1 className="text-2x1 font-bold mb-4">🍰 길드 음식 계산기</h1>
-
-      {/* 아이템 선택 */}
-      <select
-        className="border p-2 w-full mb-2"
-        value={item}
-        onChange={(e) => {
-          setItem(e.target.value as ItemName);
-          setResult(null);
-        }}
-      >
-        {Object.keys(recipes).map((key) => (
-          <option key={key} value={key}>
-            {key}
-          </option>
-        ))}
-      </select>
-
       <form
         onSubmit={(e) => {
           e.preventDefault(); //새로고침 방지
           handleCalculate()
         }}
       >
-        {/* 개수 입력 */}
-        <input
-          type="text"
-          className="border p-2 w-full mb-2"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            setResult(null);
-          }}
-          placeholder="제작할 개수를 입력해주세요"
-        />
+        <div className="flex flex-row items-center gap-2">
+          {/* 아이템 선택 */}
+          <select
+            className="border p-2 h-10 w-[180px] appearance-none"
+            value={item}
+            onChange={(e) => {
+              setItem(e.target.value as ItemName);
+              setResult(null);
+            }}
+          >
+            {Object.keys(recipes).map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
 
-        {value !== "" && !isValid && (
-          <p className="text-red-500 text-sm mb-2">
-            ! 1 이상의 정수를 입력해주세요 !
-          </p>
-        )}
+          {/* 개수 입력 */}
+          <input
+            type="text"
+            className="border p-2 h-10 w-[80px]"
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setResult(null);
+            }}
+            placeholder="수량"
+          />
 
-        {/* 버튼 */}
-        <button
-          type="submit"
-          disabled={!isValid}
-          onClick={handleCalculate}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-        >
-          계산하기
-        </button>
+          {/* 버튼 */}
+          <button
+            type="submit"
+            disabled={!isValid}
+            onClick={handleCalculate}
+            className="bg-blue-500 text-white px-4 py-2 rounded w-[100px] disabled:opacity-50"
+          >
+            계산하기
+          </button>
+        </div>
       </form>
+
+      {value !== "" && !isValid && (
+        <p className="text-red-500 text-sm mb-2">
+          ! 1 이상의 정수를 입력해주세요 !
+        </p>
+      )}
 
       {/* 결과 */}
       {
