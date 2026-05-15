@@ -1,13 +1,11 @@
-import { recipes } from "../data/recipes"
-
-type ItemName = keyof typeof recipes
+import { recipes, ItemName } from "@/data/recipes"
 
 type CalcResult = {
   materials: Record<string, number>
   cost: number;
 }
 
-function calculate(item: ItemName, count: number): CalcResult {
+export function calculate(item: ItemName, count: number): CalcResult {
   const recipe = recipes[item]
 
   if (!recipe) {

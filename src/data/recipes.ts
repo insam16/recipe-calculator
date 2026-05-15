@@ -44,3 +44,5 @@ export const recipes: Record<string, Recipe> = {
     ed: 30000
   }
 }
+
+export type ItemName = keyof typeof recipes
