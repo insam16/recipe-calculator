@@ -1,0 +1,105 @@
+type Ingredient = {
+  name: string;
+  count: number;
+}
+
+type Recipe = {
+  name: string;
+  ingredients: Ingredient[];
+  ed: number;
+}
+
+type CalcResult = {
+  materials: Record<string, number>
+  cost: number;
+}
+
+const recipes: Record<string, Recipe> = {
+  "하모니 푸딩": {
+    name: "하모니 푸딩",
+    ingredients: [
+      { name: "눈꽃 열매", count: 2 },
+      { name: "천상의 멜론", count: 2 },
+    ],
+    ed: 18000
+  },
+  "허니허니 와플": {
+    name: "허니허니 와플",
+    ingredients: [
+      { name: "스윗 스타 포테이토", count: 2 },
+      { name: "눈꽃 열매", count: 1 },
+    ],
+    ed: 12000
+  },
+  "달콤동동 화채": {
+    name: "달콤동동 화채",
+    ingredients: [
+      { name: "천상의 멜론", count: 2 },
+      { name: "큐어 토마토", count: 2 },
+    ],
+    ed: 18000
+  },
+  "천상의 디저트 파티": {
+    name: "천상의 디저트 파티",
+    ingredients: [
+      { name: "하모니 푸딩", count: 1 },
+      { name: "허니허니 와플", count: 1 },
+      { name: "달콤동동 화채", count: 1 }
+    ],
+    ed: 30000
+  }
+  /*
+  {
+    pudding: {
+    snow: 2,
+    melon: 2,
+    ed: 18000
+  },
+  waffle: {
+    potato: 2,
+    snow: 1,
+    ed: 12000
+  },
+  fruit_water: {
+    melon: 2,
+    tomato: 2,
+    ed: 18000
+  },
+  heaven_dessert_party: {
+    pudding: 1,
+    waffle: 1,
+    fruit_water: 1,
+    ed: 30000
+  }
+  */
+}
+
+function calculate(item: string, count: number): CalcResult {
+  const recipe = recipes[item]
+
+  if (!recipe) {
+    return {
+      materials: { [item]: count },
+      cost: 0
+    }
+  }
+
+  const result: CalcResult = {
+    materials: {},
+    cost: recipe.ed * count
+  }
+
+  for (const ing of recipe.ingredients) {
+    const subResult = calculate(ing.name, ing.count * count)
+
+    for (const key in subResult.materials) {
+      result.materials[key] = (result.materials[key] || 0) + subResult.materials[key]
+    }
+
+    result.cost += subResult.cost
+  }
+
+  return result
+}
+
+console.log(calculate("천상의 디저트 파티", 1))
