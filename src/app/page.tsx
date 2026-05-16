@@ -3,13 +3,38 @@
 import { isValidElement, useState } from "react"
 import { calculate, isFood } from "@/lib/recipeCalculator"
 import { recipes, ItemName } from "@/data/recipes"
+import Image from "next/image"
 
 export default function Home() {
   const [item, setItem] = useState<ItemName>("천상의 디저트 파티")
   const [value, setValue] = useState("1")
   const [result, setResult] = useState<any>(null)
+  const [selectedItem, setSelectedItem] = useState<string | null>(null)
+
   const num = Number(value || 0)
   const isValid = value === "" || (!isNaN(num) && num > 0)
+
+  const buttonStyle = "border-gray-100 border-2 rounded-lg p-1 bg-gray-100"
+  const buttonSelectedStyle = "border-yellow-400 border-2 rounded-lg p-1 bg-yellow-300"
+
+  const items = [
+    {
+      name: "천상의 디저트 파티",
+      src: "/image/heavenly-dessert-party.png"
+    },
+    {
+      name: "하모니 푸딩",
+      src: "/image/harmony-pudding.png"
+    },
+    {
+      name: "허니허니 와플",
+      src: "/image/honey-honey-waffle.png"
+    },
+    {
+      name: "달콤동동 화채",
+      src: "/image/sweet-fruit-bowl.png"
+    }
+  ]
 
   const handleCalculate = () => {
     const res = calculate(item, num)
@@ -19,6 +44,26 @@ export default function Home() {
   return (
     <div className="p-8 w-[430px] mx-auto">
       <h1 className="text-2x1 font-bold mb-4">🍰 길드 음식 계산기</h1>
+      <div className="flex gap-2 mb-4">
+        {items.map((item) => (
+          <button
+            className={selectedItem === item.name ? buttonSelectedStyle : buttonStyle}
+            onClick={() => {
+              setItem(item.name);
+              setResult(null);
+              setSelectedItem(item.name);
+            }}
+          >
+            <Image
+              src={item.src}
+              alt={item.name}
+              width={60}
+              height={60}
+            />
+          </button>
+        ))}
+      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault(); //새로고침 방지
@@ -33,6 +78,7 @@ export default function Home() {
             onChange={(e) => {
               setItem(e.target.value as ItemName);
               setResult(null);
+              setSelectedItem(e.target.value as ItemName);
             }}
           >
             {Object.keys(recipes).map((key) => (
@@ -93,7 +139,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <p>{result.foodsCost.toLocaleString()}ED</p>
+                <p>{result.foodsCost.toLocaleString()} ED</p>
               </>
             )}
 
@@ -105,7 +151,7 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <p>{result.cost.toLocaleString()}ED</p>
+            <p>{result.cost.toLocaleString()} ED</p>
           </div>
         )
       }

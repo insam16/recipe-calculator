@@ -10,6 +10,15 @@ export type Recipe = {
 }
 
 export const recipes: Record<string, Recipe> = {
+  "천상의 디저트 파티": {
+    name: "천상의 디저트 파티",
+    ingredients: [
+      { name: "하모니 푸딩", count: 1 },
+      { name: "허니허니 와플", count: 1 },
+      { name: "달콤동동 화채", count: 1 }
+    ],
+    ed: 30000
+  },
   "하모니 푸딩": {
     name: "하모니 푸딩",
     ingredients: [
@@ -34,15 +43,6 @@ export const recipes: Record<string, Recipe> = {
     ],
     ed: 18000
   },
-  "천상의 디저트 파티": {
-    name: "천상의 디저트 파티",
-    ingredients: [
-      { name: "하모니 푸딩", count: 1 },
-      { name: "허니허니 와플", count: 1 },
-      { name: "달콤동동 화채", count: 1 }
-    ],
-    ed: 30000
-  }
 }
 
 export type ItemName = keyof typeof recipes
