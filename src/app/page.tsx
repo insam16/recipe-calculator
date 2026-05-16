@@ -1,68 +1,34 @@
 "use client"
 
-import { isValidElement, useState } from "react"
-import { calculate, isFood } from "@/lib/recipeCalculator"
-import { recipes, ItemName } from "@/data/recipes"
-import Image from "next/image"
+import { useState } from "react"
+import { useCalculator, isFood } from "@/features/calculator/hooks/useCalculator"
+import { recipes } from "@/features/calculator/constants/recipes"
+import { ItemName } from "@/features/calculator/types"
+import ItemSelector from "@/features/calculator/components/ItemSelector"
 
 export default function Home() {
-  const [item, setItem] = useState<ItemName>("천상의 디저트 파티")
-  const [value, setValue] = useState("1")
-  const [result, setResult] = useState<any>(null)
-  const [selectedItem, setSelectedItem] = useState<string | null>(null)
+  const [value, setValue] = useState<string>("1")
+  const [selectedItem, setSelectedItem] = useState<ItemName>("천상의 디저트 파티")
+
+  const { calculate, result, setResult } = useCalculator()
 
   const num = Number(value || 0)
   const isValid = value === "" || (!isNaN(num) && num > 0)
 
-  const buttonStyle = "border-gray-100 border-2 rounded-lg p-1 bg-gray-100"
-  const buttonSelectedStyle = "border-yellow-400 border-2 rounded-lg p-1 bg-yellow-300"
-
-  const items = [
-    {
-      name: "천상의 디저트 파티",
-      src: "/image/heavenly-dessert-party.png"
-    },
-    {
-      name: "하모니 푸딩",
-      src: "/image/harmony-pudding.png"
-    },
-    {
-      name: "허니허니 와플",
-      src: "/image/honey-honey-waffle.png"
-    },
-    {
-      name: "달콤동동 화채",
-      src: "/image/sweet-fruit-bowl.png"
-    }
-  ]
-
   const handleCalculate = () => {
-    const res = calculate(item, num)
-    setResult(res)
+    calculate(selectedItem, num)
   }
 
   return (
     <div className="p-8 w-[430px] mx-auto">
-      <h1 className="text-2x1 font-bold mb-4">🍰 길드 음식 계산기</h1>
-      <div className="flex gap-2 mb-4">
-        {items.map((item) => (
-          <button
-            className={selectedItem === item.name ? buttonSelectedStyle : buttonStyle}
-            onClick={() => {
-              setItem(item.name);
-              setResult(null);
-              setSelectedItem(item.name);
-            }}
-          >
-            <Image
-              src={item.src}
-              alt={item.name}
-              width={60}
-              height={60}
-            />
-          </button>
-        ))}
-      </div>
+      <h1 className="text-2x1 font-bold mb-4">🍰 천디파 계산기</h1>
+      <ItemSelector
+        selectedItem={selectedItem}
+        onSelect={(item: ItemName) => {
+          setResult(null);
+          setSelectedItem(item);
+        }}
+      />
 
       <form
         onSubmit={(e) => {
@@ -74,9 +40,8 @@ export default function Home() {
           {/* 아이템 선택 */}
           <select
             className="border p-2 h-10 w-[180px] appearance-none"
-            value={item}
+            value={selectedItem}
             onChange={(e) => {
-              setItem(e.target.value as ItemName);
               setResult(null);
               setSelectedItem(e.target.value as ItemName);
             }}
@@ -124,12 +89,12 @@ export default function Home() {
           <div className="mt-6">
             <h2 className="font-bold">목표</h2>
             <ul>
-              <li key={item}>
-                {item}: {num}
+              <li key={selectedItem}>
+                {selectedItem}: {num}
               </li>
             </ul>
 
-            {!isFood(item) && (
+            {!isFood(selectedItem) && (
               <>
                 <h2 className="font-bold mt-4">필요한 음식 + ED</h2>
                 <ul>
