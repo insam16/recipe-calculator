@@ -1,36 +1,59 @@
 import { recipes, ItemName } from "@/data/recipes"
 
+type CountMap = Record<string, number>
+
 type CalcResult = {
-  materials: Record<string, number>
+  crops: CountMap
+  foods: CountMap
+  foodsCost: number;
   cost: number;
 }
 
 export function calculate(item: ItemName, count: number): CalcResult {
-  const recipe = recipes[item]
-
-  if (!recipe) {
-    return {
-      materials: { [item]: count },
-      cost: 0
-    }
-  }
-
   const result: CalcResult = {
-    materials: {},
-    cost: recipe.ed * count
+    crops: {},
+    foods: {},
+    foodsCost: 0,
+    cost: 0,
   }
 
-  for (const ing of recipe.ingredients) {
-    const subResult = calculate(ing.name, ing.count * count)
-
-    for (const key in subResult.materials) {
-      result.materials[key] = (result.materials[key] || 0) + subResult.materials[key]
-    }
-
-    result.cost += subResult.cost
-  }
+  traverse(item, count, result)
 
   return result
+}
+
+function traverse(item: ItemName, count: number, result: CalcResult) {
+  if (isCrop(item)) {
+    result.crops[item] = (result.crops[item] || 0) + count
+    return
+  }
+
+  if (isFood(item)) {
+    result.foods[item] = (result.foods[item] || 0) + count
+    result.cost += getPrice(item) * count
+  }
+  else {
+    result.cost += getPrice(item) * count
+    result.foodsCost += getPrice(item) * count
+  }
+
+  const recipe = recipes[item]
+
+  for (const ing of recipe.ingredients) {
+    traverse(ing.name, ing.count * count, result)
+  }
+}
+
+function isCrop(item: ItemName): boolean {
+  return !recipes[item]
+}
+
+export function isFood(item: ItemName): boolean {
+  return !recipes[recipes[item].ingredients[0].name]
+}
+
+function getPrice(item: ItemName): number {
+  return recipes[item].ed
 }
 
 // console.log(calculate("천상의 디저트 파티", 1))

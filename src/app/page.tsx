@@ -1,7 +1,7 @@
 "use client"
 
 import { isValidElement, useState } from "react"
-import { calculate } from "@/lib/recipeCalculator"
+import { calculate, isFood } from "@/lib/recipeCalculator"
 import { recipes, ItemName } from "@/data/recipes"
 
 export default function Home() {
@@ -83,16 +83,28 @@ export default function Home() {
               </li>
             </ul>
 
-            <h2 className="font-bold mt-4">필요한 작물</h2>
+            {!isFood(item) && (
+              <>
+                <h2 className="font-bold mt-4">필요한 음식 + ED</h2>
+                <ul>
+                  {Object.entries(result.foods).map(([name, cnt]) => (
+                    <li key={name}>
+                      {name}: {(cnt as number).toLocaleString()}
+                    </li>
+                  ))}
+                </ul>
+                <p>{result.foodsCost.toLocaleString()}ED</p>
+              </>
+            )}
+
+            <h2 className="font-bold mt-4">필요한 작물 + ED</h2>
             <ul>
-              {Object.entries(result.materials).map(([name, cnt]) => (
+              {Object.entries(result.crops).map(([name, cnt]) => (
                 <li key={name}>
                   {name}: {(cnt as number).toLocaleString()}
                 </li>
               ))}
             </ul>
-
-            <h2 className="font-bold mt-4">총 비용</h2>
             <p>{result.cost.toLocaleString()}ED</p>
           </div>
         )
