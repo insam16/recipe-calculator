@@ -22,6 +22,7 @@ export default function ItemButton({ item, isSelected, onClick }: Props) {
           alt={item.name}
           width={60}
           height={60}
+          priority={isSelected}
         />
       </button>
 
